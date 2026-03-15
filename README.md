@@ -1,7 +1,5 @@
 # Rutracpu 1-Bit Verilog CPU
 
-This version is reduced to a 1-bit accumulator CPU.
-
 - accumulator width: `1` bit
 - program counter width: `2` bits
 - program memory: `4` instructions
@@ -28,8 +26,6 @@ Quick examples:
 - If `acc` is `0` and the instruction is `SET`, `acc` becomes `1`.
 - If `acc` is `1` and the instruction is `CLEAR`, `acc` becomes `0`.
 - If the instruction is `HALT`, the CPU stops on that instruction address.
-
-You can now run a custom `.rasm` file through the CPU.
 
 Assembly format:
 
