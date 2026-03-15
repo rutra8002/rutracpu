@@ -1,5 +1,9 @@
 from rutracpu.compiler.ast import AssignStatement
 from rutracpu.compiler.ast import ForStatement
+from rutracpu.compiler.ast import GpuClearStatement
+from rutracpu.compiler.ast import GpuPlotStatement
+from rutracpu.compiler.ast import GpuPresentStatement
+from rutracpu.compiler.ast import GpuSetStatement
 from rutracpu.compiler.ast import LiteralExpr
 from rutracpu.compiler.ast import OffsetExpr
 from rutracpu.compiler.ast import PrintStatement
@@ -148,6 +152,28 @@ def parse_print(raw_line: str, line_no: int) -> PrintStatement:
     return PrintStatement(expr=parse_expression(payload, line_no), text=None, line_no=line_no)
 
 
+def parse_gpu_set(raw_line: str, line_no: int) -> GpuSetStatement:
+    payload = raw_line[7:].strip()
+    if not payload:
+        raise ValueError(f"Line {line_no}: gpu_set requires two arguments, for example: gpu_set 6, 8")
+
+    x_raw, separator, y_raw = payload.partition(",")
+    if not separator:
+        raise ValueError(f"Line {line_no}: gpu_set requires two comma-separated arguments.")
+
+    x_expr = parse_expression(x_raw.strip(), line_no)
+    y_expr = parse_expression(y_raw.strip(), line_no)
+    return GpuSetStatement(x_expr=x_expr, y_expr=y_expr, line_no=line_no)
+
+
+def parse_gpu_plot(raw_line: str, line_no: int) -> GpuPlotStatement:
+    payload = raw_line[8:].strip()
+    if not payload:
+        raise ValueError(f"Line {line_no}: gpu_plot requires one argument (0 clears, non-zero sets).")
+
+    return GpuPlotStatement(value_expr=parse_expression(payload, line_no), line_no=line_no)
+
+
 def parse_for_header(raw_line: str, line_no: int) -> tuple[str, int, int]:
     if not raw_line.endswith("{"):
         raise ValueError(f"Line {line_no}: for loop must end with '{{'.")
@@ -181,6 +207,18 @@ def parse_statement(raw_line: str, line_no: int) -> Statement:
 
     if raw_line.lower().startswith("print "):
         return parse_print(raw_line, line_no)
+
+    if raw_line.lower() == "gpu_clear":
+        return GpuClearStatement(line_no=line_no)
+
+    if raw_line.lower() == "gpu_present":
+        return GpuPresentStatement(line_no=line_no)
+
+    if raw_line.lower().startswith("gpu_set "):
+        return parse_gpu_set(raw_line, line_no)
+
+    if raw_line.lower().startswith("gpu_plot "):
+        return parse_gpu_plot(raw_line, line_no)
 
     if "=" in raw_line:
         return parse_assignment(raw_line, line_no, declare=False)

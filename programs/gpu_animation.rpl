@@ -1,0 +1,10 @@
+# High-level GPU animation demo: moving pixel across the screen.
+# Run with:
+# py .\run_rutracpu.py .\programs\gpu_animation.rpl --gpu-window --gpu-fps 10
+
+for x from 0 to 7 {
+    gpu_clear
+    gpu_set x, 8
+    gpu_plot 1
+    gpu_present
+}

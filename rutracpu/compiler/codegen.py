@@ -3,6 +3,10 @@ from pathlib import Path
 from rutracpu.compiler.ast import AssignStatement
 from rutracpu.compiler.ast import Expression
 from rutracpu.compiler.ast import ForStatement
+from rutracpu.compiler.ast import GpuClearStatement
+from rutracpu.compiler.ast import GpuPlotStatement
+from rutracpu.compiler.ast import GpuPresentStatement
+from rutracpu.compiler.ast import GpuSetStatement
 from rutracpu.compiler.ast import LiteralExpr
 from rutracpu.compiler.ast import OffsetExpr
 from rutracpu.compiler.ast import PrintStatement
@@ -10,6 +14,13 @@ from rutracpu.compiler.ast import Statement
 from rutracpu.compiler.ast import VariableExpr
 from rutracpu.compiler.ast import VariableType
 from rutracpu.compiler.parser import parse_program
+
+
+GPU_CMD_SET_X = 0xF0
+GPU_CMD_SET_Y = 0xF1
+GPU_CMD_PLOT = 0xF2
+GPU_CMD_CLEAR = 0xF3
+GPU_CMD_PRESENT = 0xF4
 
 
 def encode_string_literal(text: str) -> str:
@@ -141,6 +152,29 @@ class Compiler:
 
         self.patch_operand(skip_increment, loop_end)
 
+    def emit_gpu_command(self, command_byte: int) -> None:
+        self.emit("LOAD_IMMEDIATE", command_byte)
+        self.emit("OUTPUT_CHAR")
+
+    def emit_expr_as_char(self, expr: Expression, line_no: int) -> None:
+        self.compile_expression_load(expr, line_no)
+        self.emit("OUTPUT_CHAR")
+
+    def compile_gpu_set(self, stmt: GpuSetStatement) -> None:
+        if isinstance(stmt.x_expr, LiteralExpr) and stmt.x_expr.value > 15:
+            raise ValueError(f"Line {stmt.line_no}: gpu_set x out of range: {stmt.x_expr.value}. Valid range is 0..15.")
+        if isinstance(stmt.y_expr, LiteralExpr) and stmt.y_expr.value > 15:
+            raise ValueError(f"Line {stmt.line_no}: gpu_set y out of range: {stmt.y_expr.value}. Valid range is 0..15.")
+
+        self.emit_gpu_command(GPU_CMD_SET_X)
+        self.emit_expr_as_char(stmt.x_expr, stmt.line_no)
+        self.emit_gpu_command(GPU_CMD_SET_Y)
+        self.emit_expr_as_char(stmt.y_expr, stmt.line_no)
+
+    def compile_gpu_plot(self, stmt: GpuPlotStatement) -> None:
+        self.emit_gpu_command(GPU_CMD_PLOT)
+        self.emit_expr_as_char(stmt.value_expr, stmt.line_no)
+
     def compile_statement(self, stmt: Statement) -> None:
         if isinstance(stmt, AssignStatement):
             self.compile_assignment(stmt)
@@ -148,6 +182,22 @@ class Compiler:
 
         if isinstance(stmt, PrintStatement):
             self.compile_print(stmt)
+            return
+
+        if isinstance(stmt, GpuClearStatement):
+            self.emit_gpu_command(GPU_CMD_CLEAR)
+            return
+
+        if isinstance(stmt, GpuPresentStatement):
+            self.emit_gpu_command(GPU_CMD_PRESENT)
+            return
+
+        if isinstance(stmt, GpuSetStatement):
+            self.compile_gpu_set(stmt)
+            return
+
+        if isinstance(stmt, GpuPlotStatement):
+            self.compile_gpu_plot(stmt)
             return
 
         self.compile_for(stmt)

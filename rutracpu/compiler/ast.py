@@ -51,4 +51,35 @@ class ForStatement:
     line_no: int
 
 
-Statement = AssignStatement | PrintStatement | ForStatement
+@dataclass(frozen=True)
+class GpuClearStatement:
+    line_no: int
+
+
+@dataclass(frozen=True)
+class GpuPresentStatement:
+    line_no: int
+
+
+@dataclass(frozen=True)
+class GpuSetStatement:
+    x_expr: Expression
+    y_expr: Expression
+    line_no: int
+
+
+@dataclass(frozen=True)
+class GpuPlotStatement:
+    value_expr: Expression
+    line_no: int
+
+
+Statement = (
+    AssignStatement
+    | PrintStatement
+    | ForStatement
+    | GpuClearStatement
+    | GpuPresentStatement
+    | GpuSetStatement
+    | GpuPlotStatement
+)

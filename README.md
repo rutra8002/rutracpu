@@ -21,6 +21,28 @@ Instruction set:
 - `1001 xxxxxxxx`: `OUTPUT_CHAR`
 - `1111 xxxxxxxx`: `HALT`
 
+GPU (testbench peripheral):
+
+- A simple `16x16` monochrome GPU is available in simulation.
+- The GPU consumes special `OUTPUT_CHAR` bytes as commands.
+- Non-command characters still print normally.
+
+GPU command bytes (`OUTPUT_CHAR` values):
+
+- `0xF0`: set X (next byte, low 4 bits used)
+- `0xF1`: set Y (next byte, low 4 bits used)
+- `0xF2`: plot at `(x, y)` using next byte (`0` clears pixel, non-zero sets)
+- `0xF3`: clear framebuffer
+- `0xF4`: present frame (testbench writes a 16x16 ASCII image to file)
+
+GPU frame output:
+
+- Frames are written to `gpu_frames.txt` by default.
+- Use `+gpufile=some_path.txt` to choose a different output file.
+- Each `present` emits one frame block with `#` (pixel on) and `.` (pixel off).
+- Use `py .\run_rutracpu.py .\programs\gpu_demo.rasm --gpu-window` to display frames in a real desktop window.
+- Optional viewer tuning: `--gpu-fps 12 --gpu-pixel-size 28`.
+
 Instruction behavior:
 
 - `PASS`: no register or memory change; `pc = pc + 1`.
@@ -70,6 +92,10 @@ Supported `.rpl` statements:
 - `print "HELLO"`
 - `print "HELLO\n"`
 - `for i from 1 to 10 {` followed by statements and a closing `}`
+- `gpu_clear`
+- `gpu_set x, y`
+- `gpu_plot v`
+- `gpu_present`
 
 Loop behavior:
 
@@ -78,6 +104,13 @@ Loop behavior:
 - assigning to the active loop variable inside its own loop body is rejected to keep generated control flow correct
 - `print` uses the declared variable type: `int` prints numbers, `char` prints ASCII characters
 - `print "\n"` prints a newline
+
+High-level GPU behavior:
+
+- `gpu_set x, y`: set cursor position (`x` and `y` use low 4 bits; literals should be `0..15`)
+- `gpu_plot v`: plot cursor pixel (`0` clears, non-zero sets)
+- `gpu_clear`: clear full 16x16 framebuffer
+- `gpu_present`: emit frame to GPU output
 
 Example `.rpl` program:
 

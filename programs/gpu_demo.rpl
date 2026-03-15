@@ -1,0 +1,28 @@
+# High-level GPU demo: draw a diagonal line and present one frame.
+gpu_clear
+
+gpu_set 0, 0
+gpu_plot 1
+
+gpu_set 1, 1
+gpu_plot 1
+
+gpu_set 2, 2
+gpu_plot 1
+
+gpu_set 3, 3
+gpu_plot 1
+
+gpu_set 4, 4
+gpu_plot 1
+
+gpu_set 5, 5
+gpu_plot 1
+
+gpu_set 6, 6
+gpu_plot 1
+
+gpu_set 7, 7
+gpu_plot 1
+
+gpu_present
