@@ -1,0 +1,29 @@
+
+5. Printing statistics.
+
+=== rutracpu ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      524 wires
+      695 wire bits
+       28 public wires
+      185 public wire bits
+        9 ports
+       41 port bits
+      665 cells
+       39   $_ANDNOT_
+       74   $_AND_
+        1   $_DFFE_PP0N_
+       25   $_DFFE_PP0P_
+      128   $_DFFE_PP_
+        1   $_DFF_PP0_
+       39   $_MUX_
+       30   $_NAND_
+       95   $_NOR_
+       18   $_NOT_
+      156   $_ORNOT_
+       31   $_OR_
+       26   $_XNOR_
+        2   $_XOR_
+

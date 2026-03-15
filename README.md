@@ -5,6 +5,7 @@
 - program memory: `256` instructions
 - instruction width: `12` bits (`opcode[11:8] + operand[7:0]`)
 - data memory: `16` bytes of RAM
+- instruction ROM is external to the CPU core
 
 Instruction set:
 
@@ -63,7 +64,12 @@ py .\run_rutracpu.py .\programs\program.rasm
 What happens:
 
 1. The Python script assembles the `.rasm` file into a matching `.mem` file with the same base name.
-2. The testbench loads that generated `.mem` file into the CPU ROM with `$readmemb`.
+2. The testbench loads that generated `.mem` file into a separate ROM module with `$readmemb`.
 3. `OUTPUT_INT` prints decimal lines and `OUTPUT_CHAR` prints ASCII text.
 4. The simulation runs until `HALT` or timeout at 100 cycles.
 5. The final CPU state is printed.
+
+Synthesis note:
+
+- The CPU core now takes `instruction` as an input instead of owning ROM internally.
+- This keeps synthesis results representative of the programmable CPU instead of specializing the logic for one baked-in program.

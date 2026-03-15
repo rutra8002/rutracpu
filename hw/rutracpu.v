@@ -1,6 +1,7 @@
 module rutracpu (
     input wire clk,
     input wire reset,
+    input wire [11:0] instruction,
     output reg [7:0] pc,
     output reg [7:0] acc,
     output reg [7:0] out_data,
@@ -8,12 +9,11 @@ module rutracpu (
     output reg out_is_char,
     output reg halted
 );
-    reg [11:0] rom [0:255];
     reg [7:0] ram [0:15];
 
-    wire [3:0] opcode = rom[pc][11:8];
-    wire [7:0] operand_imm = rom[pc][7:0];
-    wire [3:0] operand_addr = rom[pc][3:0];
+    wire [3:0] opcode = instruction[11:8];
+    wire [7:0] operand_imm = instruction[7:0];
+    wire [3:0] operand_addr = instruction[3:0];
 
     initial begin
         pc = 8'd0;
@@ -80,4 +80,13 @@ module rutracpu (
             endcase
         end
     end
+endmodule
+
+module rutracpu_rom (
+    input wire [7:0] address,
+    output wire [11:0] instruction
+);
+    reg [11:0] rom [0:255];
+
+    assign instruction = rom[address];
 endmodule

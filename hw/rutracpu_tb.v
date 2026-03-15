@@ -6,15 +6,22 @@ module rutracpu_tb;
     reg [7:0] cycles;
     reg [1023:0] memfile;
     wire [7:0] pc;
+    wire [11:0] instruction;
     wire [7:0] acc;
     wire [7:0] out_data;
     wire out_valid;
     wire out_is_char;
     wire halted;
 
+    rutracpu_rom rom (
+        .address(pc),
+        .instruction(instruction)
+    );
+
     rutracpu dut (
         .clk(clk),
         .reset(reset),
+        .instruction(instruction),
         .pc(pc),
         .acc(acc),
         .out_data(out_data),
@@ -34,7 +41,7 @@ module rutracpu_tb;
         if (!$value$plusargs("memfile=%s", memfile))
             memfile = "program.mem";
 
-        $readmemb(memfile, dut.rom);
+        $readmemb(memfile, rom.rom);
 
         #12;
         reset = 1'b0;

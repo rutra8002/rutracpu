@@ -1,0 +1,5 @@
+read_verilog hw/rutracpu.v
+synth -top rutracpu
+stat
+show
+tee -o synth.log stat
