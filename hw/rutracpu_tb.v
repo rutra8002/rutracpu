@@ -46,7 +46,7 @@ module rutracpu_tb;
         #12;
         reset = 1'b0;
 
-        while (!halted && cycles < 8'd100) begin
+        while (!halted && cycles < 8'd255) begin
             @(posedge clk);
             cycles = cycles + 8'd1;
             if (out_valid) begin
