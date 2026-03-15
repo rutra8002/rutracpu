@@ -35,7 +35,7 @@ Assembly format:
 - `;` starts a comment
 - maximum program size: `4` instructions
 
-Example program in [program.rasm](program.rasm):
+Example program in [programs/program.rasm](programs/program.rasm):
 
 1. `SET`
 2. `CLEAR`
@@ -46,7 +46,7 @@ After execution, the accumulator should be `1`.
 
 If Icarus Verilog is installed, run:
 
-py .\run_rutracpu.py .\program.rasm
+py .\run_rutracpu.py .\programs\program.rasm
 
 What happens:
 

@@ -7,7 +7,7 @@ from simulator import run_simulation
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Assemble and run rutracpu programs.")
-    parser.add_argument("rasm_file", nargs="?", default="program.rasm", help="Path to the .rasm file")
+    parser.add_argument("rasm_file", nargs="?", default="programs/program.rasm", help="Path to the .rasm file")
     args = parser.parse_args()
 
     workspace = Path(__file__).resolve().parent

@@ -7,7 +7,7 @@ def run_command(command: list[str]) -> int:
 
 
 def run_simulation() -> int:
-    compile_rc = run_command(["iverilog", "-o", "rutracpu_tb", "rutracpu.v", "rutracpu_tb.v"])
+    compile_rc = run_command(["iverilog", "-o", "rutracpu_tb", "hw/rutracpu.v", "hw/rutracpu_tb.v"])
     if compile_rc != 0:
         return compile_rc
 
