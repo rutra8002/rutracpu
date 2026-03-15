@@ -12,7 +12,7 @@ def main() -> int:
 
     workspace = Path(__file__).resolve().parent
     asm_path = (workspace / args.rasm_file).resolve() if not Path(args.rasm_file).is_absolute() else Path(args.rasm_file)
-    mem_path = workspace / "program.mem"
+    mem_path = asm_path.with_suffix(".mem")
 
     try:
         assemble(asm_path, mem_path)
@@ -20,7 +20,7 @@ def main() -> int:
         print(exc, file=sys.stderr)
         return 1
 
-    return run_simulation()
+    return run_simulation(mem_path)
 
 
 if __name__ == "__main__":

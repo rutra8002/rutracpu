@@ -1,0 +1,3 @@
+; HELLO demo using string type pseudo-instruction.
+PRINT_STRING "HELLO"
+HALT
