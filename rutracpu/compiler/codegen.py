@@ -40,8 +40,8 @@ class Compiler:
         if name in self.variables:
             return self.variables[name]
 
-        if self.next_address > 15:
-            raise ValueError(f"Line {line_no}: out of RAM variables. Maximum is 16.")
+        if self.next_address > 255:
+            raise ValueError(f"Line {line_no}: out of RAM variables. Maximum is 256.")
 
         address = self.next_address
         self.variables[name] = address

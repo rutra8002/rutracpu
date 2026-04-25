@@ -6,8 +6,8 @@ INSTRUCTION_SET = {
     "LOAD_IMMEDIATE": ("0001", "imm8"),
     "ADD_IMMEDIATE": ("0010", "imm8"),
     "SUBTRACT_IMMEDIATE": ("0011", "imm8"),
-    "LOAD": ("0100", "mem4"),
-    "STORE": ("0101", "mem4"),
+    "LOAD": ("0100", "imm8"),
+    "STORE": ("0101", "imm8"),
     "JUMP": ("0110", "pc8"),
     "JUMP_IF_ZERO": ("0111", "pc8"),
     "OUTPUT_INT": ("1000", "none"),
@@ -73,11 +73,6 @@ def encode_instruction(mnemonic: str, raw_operand: str | None) -> str:
             raise ValueError(f"Instruction '{mnemonic}' requires one operand (0..255).")
         imm_value = parse_int(raw_operand, 0, 255, "immediate")
         operand_bits = f"{imm_value:08b}"
-    elif operand_type == "mem4":
-        if raw_operand is None:
-            raise ValueError(f"Instruction '{mnemonic}' requires one operand (0..15).")
-        addr_value = parse_int(raw_operand, 0, 15, "address")
-        operand_bits = "0000" + f"{addr_value:04b}"
     elif operand_type == "pc8":
         if raw_operand is None:
             raise ValueError(f"Instruction '{mnemonic}' requires one operand (0..255).")

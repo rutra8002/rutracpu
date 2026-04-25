@@ -3,7 +3,7 @@
 module rutracpu_tb;
     reg clk;
     reg reset;
-    reg [7:0] cycles;
+    reg [31:0] cycles;
     reg [1023:0] memfile;
     reg [1023:0] gpufile;
     wire [7:0] pc;
@@ -76,7 +76,7 @@ module rutracpu_tb;
     initial begin
         clk = 1'b0;
         reset = 1'b1;
-        cycles = 8'd0;
+        cycles = 32'd0;
         gpu_frame_index = 0;
 
         memfile = "program.mem";
@@ -96,9 +96,9 @@ module rutracpu_tb;
         #12;
         reset = 1'b0;
 
-        while (!halted && cycles < 8'd255) begin
+        while (!halted && cycles < 32'd1000000) begin
             @(posedge clk);
-            cycles = cycles + 8'd1;
+            cycles = cycles + 32'd1;
             if (out_valid) begin
                 if (out_is_char && gpu_consumed)
                     ;

@@ -9,11 +9,10 @@ module rutracpu (
     output reg out_is_char,
     output reg halted
 );
-    reg [7:0] ram [0:15];
+    reg [7:0] ram [0:255];
 
     wire [3:0] opcode = instruction[11:8];
     wire [7:0] operand_imm = instruction[7:0];
-    wire [3:0] operand_addr = instruction[3:0];
 
     initial begin
         pc = 8'd0;
@@ -49,11 +48,11 @@ module rutracpu (
                     pc <= pc + 8'd1;
                 end
                 4'h4: begin                                // LOAD address
-                    acc <= ram[operand_addr];
+                    acc <= ram[operand_imm];
                     pc <= pc + 8'd1;
                 end
                 4'h5: begin                                // STORE address
-                    ram[operand_addr] <= acc;
+                    ram[operand_imm] <= acc;
                     pc <= pc + 8'd1;
                 end
                 4'h6: pc <= operand_imm;                   // JUMP address
