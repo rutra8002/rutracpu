@@ -117,7 +117,7 @@ Example `.rpl` program:
 ```text
 # Count from 1 to 10 and print each number.
 let char ch = "a"
-for i from 1 to 3 {
+for i from 1 to 10 {
 	print i
 	print ch
 	ch = ch - 1
@@ -158,11 +158,6 @@ What happens:
 4. `OUTPUT_INT` prints decimal lines and `OUTPUT_CHAR` prints ASCII text.
 5. The simulation runs until `HALT` or timeout at 255 cycles.
 6. The final CPU state is printed.
-
-Synthesis note:
-
-- The CPU core now takes `instruction` as an input instead of owning ROM internally.
-- This keeps synthesis results representative of the programmable CPU instead of specializing the logic for one baked-in program.
 
 Python toolchain layout:
 
