@@ -4,7 +4,7 @@
 - program counter width: `8` bits
 - program memory: `256` instructions
 - instruction width: `12` bits (`opcode[11:8] + operand[7:0]`)
-- data memory: `16` bytes of RAM
+- data memory: `256` bytes of RAM
 - instruction ROM is external to the CPU core
 
 Instruction set:
@@ -13,8 +13,8 @@ Instruction set:
 - `0001 iiiiiiii`: `LOAD_IMMEDIATE i`
 - `0010 iiiiiiii`: `ADD_IMMEDIATE i`
 - `0011 iiiiiiii`: `SUBTRACT_IMMEDIATE i`
-- `0100 0000aaaa`: `LOAD a`
-- `0101 0000aaaa`: `STORE a`
+- `0100 aaaaaaaa`: `LOAD a`
+- `0101 aaaaaaaa`: `STORE a`
 - `0110 aaaaaaaa`: `JUMP a`
 - `0111 aaaaaaaa`: `JUMP_IF_ZERO a`
 - `1000 xxxxxxxx`: `OUTPUT_INT`
@@ -66,14 +66,14 @@ Assembly format:
 - `;` starts a comment
 - programs can contain up to `256` instructions
 - immediate operands for `LOAD_IMMEDIATE`, `ADD_IMMEDIATE`, `SUBTRACT_IMMEDIATE`: `0..255`
-- address operands for `LOAD`, `STORE`: `0..15`
+- address operands for `LOAD`, `STORE`: `0..255`
 - address operands for `JUMP`, `JUMP_IF_ZERO`: `0..255`
 
 High-level language:
 
 - `.rpl` source files compile into plain `.rasm`
 - comments start with `#`
-- variables live in the CPU's `16` RAM bytes, so a program can use at most `16` named variables total
+- variables live in the CPU's `256` RAM bytes, so a program can use at most `256` named variables total
 - variables must be declared with `let` before you assign or read them
 - `for` loop variables are created by the loop header itself
 - variables store one byte; use `int` for numeric output and `char` for character output
